@@ -1,0 +1,15 @@
+name: cache-probe
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch pages twice and show cache headers
+        run: |
+          for path in / /carriers/ /plans/; do
+            for n in 1 2; do
+              echo "=== https://moneysavingpro.com$path (request $n) ==="
+              curl -s -o /dev/null -D - "https://moneysavingpro.com$path" | grep -iE '^(HTTP|cache-control|age|x-cache|x-cache-status|cf-cache-status|x-msp|server|vary|expires|last-modified|etag)'
+              sleep 2
+            done
+          done
